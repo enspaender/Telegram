@@ -289,7 +289,7 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
     TextSelectionHelper.ArticleTextSelectionHelper textSelectionHelper;
     TextSelectionHelper.ArticleTextSelectionHelper textSelectionHelperBottomSheet;
 
-    int allowAnimationIndex = -1;
+    private int allowAnimationIndex = -1;
 
     private final String BOTTOM_SHEET_VIEW_TAG = "bottomSheet";
 
@@ -3033,7 +3033,13 @@ public class ArticleViewer implements NotificationCenter.NotificationCenterDeleg
         //containerView.setFitsSystemWindows(true);
         if (Build.VERSION.SDK_INT >= 21) {
             windowView.setFitsSystemWindows(true);
-            containerView.setOnApplyWindowInsetsListener((v, insets) -> insets.consumeSystemWindowInsets());
+            containerView.setOnApplyWindowInsetsListener((v, insets) -> {
+                if (Build.VERSION.SDK_INT >= 30) {
+                    return WindowInsets.CONSUMED;
+                } else {
+                    return insets.consumeSystemWindowInsets();
+                }
+            });
         }
 
         fullscreenVideoContainer = new FrameLayout(activity);
